@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Listado de Clientes</title>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+
+        <section th:fragment='listadoClientes' id='clientes'>
+            <div class='conatiner'>
+                <div class='row'>
+                    <div class='col-md-9'>
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>[[#{persona.titulo-lista}]]</h4>
+                            </div>
+                            <div th:if='${personas !=null and !personas.empty}'>
+                                <table class='table table-hover'>
+                                    <thead class='table-dark'>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>[[#{persona.nombre}]]</th>
+                                            <th>[[#{persona.saldo}]]</th>
+                                            <th>[[#{persona.apellido}]]</th>
+                                            <th>[[#{persona.telefono}]]</th> 
+                                            <th>[[#{persona.email}]]</th>
+                                            <th sec:authorize="hasRole('ROLE_ADMIN')">[[#{accion.editar}]]</th>
+                                            <th sec:authorize="hasRole('ROLE_ADMIN')">[[#{accion.eliminar}]]</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each='persona, contador :${personas}'>
+                                            <td th:text="${contador.count}"></td>
+                                            <td th:text="${persona.nombre}"></td>
+                                            <td th:text="${new java.text.DecimalFormat('$#,##0.00').format(persona.saldo)}"></td>
+                                            <td th:text="${persona.apellido}"></td>
+                                            <td th:text="${persona.telefono}"></td>
+                                            <td th:text="${persona.email}"></td>
+                                            <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/editar/} + ${persona.id}" class='btn btn-secondary' ><i class="fas fa-angle-double-right"></i> [[#{accion.editar}]]</a></td>
+                                            <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/eliminar(id=${persona.id})}" class="btn btn-danger" ><i class="fas fa-angle-double-right"></i> [[#{accion.eliminar}]]</a></td>
+
+                                        </tr>
+                                    </tbody>
+
+
+                                </table>
+
+                            </div>
+                            <div class="text-center p-2" th:if='${personas ==null or personas.empty}'>
+                                <span>[[#{persona.lista-vacia}]]</span> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center bg-danger text-white mb-3">
+                            <div class="card-body">
+                                <h3 th:text='#{persona.saldoTotal}'></h3>
+                                <h4 class="plisplay-4">[[${new java.text.DecimalFormat('$#,##0.00').format(saldoTotal)}]]</h4>
+                            </div>
+                        </div>
+                        <div class="card text-center bg-success text-white mb-3">
+                            <div class="card-body">
+                                <h3 th:text='#{persona.totalClientes}'></h3>
+                                <h4 class="display-4"><i class="fas fa-users" th:text='${totalClientes}'></i></h4>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
